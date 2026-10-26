@@ -16,3 +16,11 @@
 # You can also pretty-print and page through the documentation for configuration
 # options using:
 #     config nu --doc | nu-highlight | less -R
+
+# 默认编辑器：neovim
+$env.config.buffer_editor = "nvim"
+$env.EDITOR = "nvim"
+$env.VISUAL = "nvim"
+
+# 启动不显示 banner
+$env.config.show_banner = false
