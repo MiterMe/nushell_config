@@ -16,3 +16,5 @@
 #
 # You can remove these comments if you want or leave
 # them for future reference.
+
+$env.IN_USE_SHELL = "Nushell"
