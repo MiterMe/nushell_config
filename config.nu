@@ -7,7 +7,7 @@
 # (or import) custom commands, or run any other startup tasks.
 # See https://www.nushell.sh/book/configuration.html
 #
-# Nushell sets "sensible defaults" for most configuration settings, 
+# Nushell sets "sensible defaults" for most configuration settings,
 # so your `config.nu` only needs to override these defaults if desired.
 #
 # You can open this file in your default editor using:
@@ -45,7 +45,7 @@ def --wrapped lokj [...args: string] {
 #   lsof_tcp_listen | where ps_command == null
 def lsof_tcp_listen [] {
     let lsof_table = (
-        ^lsof -nP -iTCP -sTCP:LISTEN -Fpcn
+        ^sudo lsof -nP -iTCP -sTCP:LISTEN -Fpcn
         | into string
         | lines
         | parse --regex '^(?P<k>[a-z])(?P<v>.*)$'
@@ -81,8 +81,15 @@ def ntom [] {
 }
 
 def kitomi [] {
-  ($in | str replace 'Ki' '' | into int) / 1024
-  | math floor
+  let s = $in
+  if ($s | str ends-with 'Mi') {
+    $s | str replace -r 'Mi$' '' | into int
+  } else if ($s | str ends-with 'Ki') {
+    ($s | str replace -r 'Ki$' '' | into int) / 1024
+    | math floor
+  } else {
+    error make {msg: $"kitomi: unexpected unit in ($s)"}
+  }
 }
 
 def nodes_usage [cluster: string, nodes: list<string>] {
