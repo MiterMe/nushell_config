@@ -25,6 +25,13 @@ $env.VISUAL = "nvim"
 # 启动不显示 banner
 $env.config.show_banner = false
 
+# 每次显示提示符前发送 OSC 2，将终端标题设为 "$IN_USE_SHELL $PWD"。
+# 关闭内置标题更新，避免覆盖自定义标题。
+$env.config.shell_integration.osc2 = false
+$env.config.hooks.pre_prompt = ($env.config.hooks.pre_prompt | append {||
+    print --no-newline $"(char --integer 27)]2;($env.IN_USE_SHELL) ($env.PWD)(char bel)"
+})
+
 # Kubernetes：每次显式指定 context，避免依赖 current-context。
 alias cuk = ^kubectl --context cu-k8s
 alias lok = ^kubectl --context local-k3s
